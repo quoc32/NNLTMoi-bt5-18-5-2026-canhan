@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import CourseCard from '../components/CourseCard';
+import HorizontalPaginationSlider from '../components/HorizontalPaginationSlider';
 import Countdown from '../components/Countdown';
 import { getHomeCourses } from '../utils/api';
 import { Sparkles, Trophy, Rocket, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-    const [courses, setCourses] = useState({ latest: [], bestSellers: [], flashSale: [] });
+    const [courses, setCourses] = useState({ latest: [], bestSellers: [], mostViewed: [], flashSale: [] });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -123,20 +124,45 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Best Sellers */}
-            <section className="px-4 md:px-8 mb-24 bg-gray-50 py-24">
+            {/* Best Sellers Slider */}
+            <section className="px-4 md:px-8 mb-24 bg-gray-50 py-24 border-y border-gray-100/50">
                 <div className="max-w-7xl mx-auto">
-                    <div className="flex items-center justify-between mb-12">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
                         <div>
-                            <h2 className="text-3xl font-bold text-gray-900 mb-2">Khóa học bán chạy nhất</h2>
-                            <div className="w-12 h-1.5 bg-orange-500 rounded-full"></div>
+                            <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-100 px-3.5 py-1.5 rounded-full text-orange-600 font-extrabold text-xs uppercase tracking-widest mb-3">
+                                <Trophy className="w-3.5 h-3.5 fill-current" />
+                                Học nhiều nhất
+                            </div>
+                            <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900">
+                                Top 10 Bán Chạy Nhất
+                            </h2>
                         </div>
+                        <p className="text-gray-500 font-medium text-sm max-w-sm">
+                            Những chương trình đào tạo chất lượng cao được hàng ngàn học viên lựa chọn tham gia nhiều nhất.
+                        </p>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {courses.bestSellers.map(course => (
-                            <CourseCard key={course.id} course={course} />
-                        ))}
+                    <HorizontalPaginationSlider courses={courses.bestSellers} />
+                </div>
+            </section>
+
+            {/* Most Viewed Slider */}
+            <section className="px-4 md:px-8 mb-24 py-12">
+                <div className="max-w-7xl mx-auto">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+                        <div>
+                            <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-full text-indigo-600 font-extrabold text-xs uppercase tracking-widest mb-3">
+                                <Sparkles className="w-3.5 h-3.5 fill-current" />
+                                Xu hướng hiện tại
+                            </div>
+                            <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900">
+                                Top 10 Xem Nhiều Nhất
+                            </h2>
+                        </div>
+                        <p className="text-gray-500 font-medium text-sm max-w-sm">
+                            Được quan tâm và tìm kiếm nhiều nhất bởi cộng đồng học viên trong tuần qua.
+                        </p>
                     </div>
+                    <HorizontalPaginationSlider courses={courses.mostViewed} />
                 </div>
             </section>
         </div>

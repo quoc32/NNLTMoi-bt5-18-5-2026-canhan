@@ -1,7 +1,7 @@
 const { Course, Lesson } = require('../models');
 const { Op } = require('sequelize');
 
-// Get courses for Home Page (Latest, Best Seller, Flash Sale)
+// Get courses for Home Page (Latest, Best Seller, Most Viewed, Flash Sale)
 exports.getHomeCourses = async (req, res) => {
     try {
         const latestCourses = await Course.findAll({
@@ -9,10 +9,16 @@ exports.getHomeCourses = async (req, res) => {
             order: [['createdAt', 'DESC']]
         });
 
+        // Top 10 Best Sellers
         const bestSellers = await Course.findAll({
-            where: { isBestSeller: true },
-            limit: 8,
+            limit: 10,
             order: [['studentCount', 'DESC']]
+        });
+
+        // Top 10 Most Viewed
+        const mostViewed = await Course.findAll({
+            limit: 10,
+            order: [['views', 'DESC']]
         });
 
         const flashSale = await Course.findAll({
@@ -28,6 +34,7 @@ exports.getHomeCourses = async (req, res) => {
             data: {
                 latest: latestCourses,
                 bestSellers,
+                mostViewed,
                 flashSale
             }
         });
@@ -36,12 +43,12 @@ exports.getHomeCourses = async (req, res) => {
     }
 };
 
-// Search and Filter Courses
+// Search and Filter Courses with Pagination
 exports.getCourses = async (req, res) => {
     try {
         const { 
             search, category, level, minPrice, maxPrice, 
-            minRating, sort, type 
+            minRating, sort, type, page, limit 
         } = req.query;
 
         let where = {};
@@ -85,13 +92,28 @@ exports.getCourses = async (req, res) => {
         if (sort === 'Giá cao đến thấp') order = [['price', 'DESC']];
         if (sort === 'Giá thấp đến cao') order = [['price', 'ASC']];
         if (sort === 'Đánh giá cao nhất') order = [['rating', 'DESC']];
+        if (sort === 'Xem nhiều nhất') order = [['views', 'DESC']];
+        if (sort === 'Bán chạy nhất') order = [['studentCount', 'DESC']];
 
-        const courses = await Course.findAll({ where, order });
+        // Pagination setup
+        const pageNum = page ? parseInt(page) : null;
+        const limitNum = limit ? parseInt(limit) : 6;
+
+        let queryOptions = { where, order };
+        if (pageNum) {
+            queryOptions.limit = limitNum;
+            queryOptions.offset = (pageNum - 1) * limitNum;
+        }
+
+        const { count, rows } = await Course.findAndCountAll(queryOptions);
 
         res.status(200).json({
             success: true,
-            count: courses.length,
-            data: courses
+            count,
+            totalPages: pageNum ? Math.ceil(count / limitNum) : 1,
+            currentPage: pageNum || 1,
+            limit: pageNum ? limitNum : count,
+            data: rows
         });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });

@@ -63,6 +63,10 @@ const Course = sequelize.define('Course', {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
+    views: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
     flashSaleEnd: {
         type: DataTypes.DATE,
         allowNull: true,
