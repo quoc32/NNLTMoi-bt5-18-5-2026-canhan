@@ -1,0 +1,76 @@
+############################################################
+### 1. HỆ THỐNG XÁC THỰC (AUTHENTICATION)
+############################################################
+
+### Đăng ký tài khoản mới
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "username": "quoc1",
+    "email": "quoc1@gmail.com",
+    "password": "123456"
+}
+
+### Đăng nhập để lấy Token
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "quoc01@example.com",
+    "password": "123456"
+}
+
+############################################################
+### 2. QUẢN LÝ THÀNH VIÊN (USER PROFILE)
+############################################################
+
+### Xem thông tin cá nhân (Copy Token dán vào sau chữ Bearer)
+GET http://localhost:5000/api/users/profile
+Authorization: Bearer <DÁN_TOKEN_VÀO_ĐÂY>
+
+### Chỉnh sửa thông tin cá nhân
+PUT http://localhost:5000/api/users/profile
+Authorization: Bearer <DÁN_TOKEN_VÀO_ĐÂY>
+Content-Type: application/json
+
+{
+    "fullName": "Vũ Anh Quốc",
+    "bio": "I love building clean and scalable APIs with ExpressJS."
+}
+
+############################################################
+### 3. QUẢN LÝ KHÓA HỌC (COURSES)
+############################################################
+
+### Lấy dữ liệu Trang chủ (Latest, Best-sellers, Flash Sale)
+GET http://localhost:5000/api/courses/home
+
+### Lấy danh sách tất cả khóa học
+GET http://localhost:5000/api/courses
+
+### Tìm kiếm khóa học theo tên hoặc giảng viên
+GET http://localhost:5000/api/courses?search=React
+
+### Lọc khóa học theo Danh mục (Lập trình, Thiết kế, Marketing...)
+GET http://localhost:5000/api/courses?category=Lập trình
+
+### Lọc theo cấp độ (Mới bắt đầu, Trung cấp, Chuyên gia)
+GET http://localhost:5000/api/courses?level=Mới bắt đầu
+
+### Lọc theo loại giá (Miễn phí / Có phí)
+GET http://localhost:5000/api/courses?type=Có phí
+
+### Lọc đa điều kiện & Sắp xếp (Ví dụ: Lập trình + 4 sao + Giá cao đến thấp)
+GET http://localhost:5000/api/courses?category=Lập trình&minRating=4&sort=Giá cao đến thấp
+
+### Xem chi tiết khóa học (Cần thay {id} bằng ID thực tế từ các API trên)
+GET http://localhost:5000/api/courses/57120cb9-9863-46a7-91de-7ca45901bb97
+
+############################################################
+### HƯỚNG DẪN TEST:
+### 1. Mở terminal, vào thư mục ExpressJS01 chạy: node seed.js
+### 2. Gọi API Đăng nhập để lấy chuỗi Token.
+### 3. Dán Token vào các API yêu cầu xác thực để xem/sửa profile.
+### 4. Gọi API Trang chủ để lấy các ID khóa học mẫu để test API Chi tiết.
+############################################################

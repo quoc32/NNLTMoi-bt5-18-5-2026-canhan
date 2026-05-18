@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+ExpressJS01/node_modules/
+ExpressJS01/package-lock.json
+ReactJS01/node_modules/
+ReactJS01/package-lock.json
+
+# Environment Variables
+.env
+ExpressJS01/.env
+
+# Build outputs
+dist/
+ReactJS01/dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Editor & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Production
+build/
